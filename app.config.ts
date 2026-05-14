@@ -13,12 +13,13 @@ const APP_ENV = (process.env.APP_ENV ?? process.env.EXPO_PUBLIC_APP_ENV ?? "deve
 dotenv.config({ path: resolve(__dirname, `.env.${APP_ENV}`), override: true });
 dotenv.config({ path: resolve(__dirname, ".env.local"), override: true });
 
-const APP_NAME = process.env.EXPO_PUBLIC_APP_NAME ?? "RN-EXPO";
-const APP_SLUG = process.env.EXPO_PUBLIC_APP_SLUG ?? "rn-expo";
+const APP_NAME = process.env.EXPO_PUBLIC_APP_NAME ?? "REACT-NATIVE-EXPO-BASE-SETUP";
+const APP_SLUG = process.env.EXPO_PUBLIC_APP_SLUG ?? "react-native-expo-base-setup";
 const IOS_BUNDLE_IDENTIFIER =
-  process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER ?? "tech.reifylabs.rnexpo";
-const ANDROID_PACKAGE = process.env.EXPO_PUBLIC_ANDROID_PACKAGE ?? "tech.reifylabs.rnexpo";
-const SCHEME = process.env.EXPO_PUBLIC_APP_LINKING_SCHEME ?? "rnexpo";
+  process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER ?? "tech.reifylabs.reactnativeexpobasesetup";
+const ANDROID_PACKAGE =
+  process.env.EXPO_PUBLIC_ANDROID_PACKAGE ?? "tech.reifylabs.reactnativeexpobasesetup";
+const SCHEME = process.env.EXPO_PUBLIC_APP_LINKING_SCHEME ?? "reactnativeexpobasesetup";
 
 const config: ExpoConfig = {
   name: APP_NAME,

@@ -1,109 +1,869 @@
-# RN-EXPO
+Below is a more detailed, beginner-friendly, production-quality README version. It explains the architecture, workflows, and development practices in a human way so even freshers can onboard easily.
 
-Enterprise-oriented Expo (SDK 55) + React Native (TypeScript) foundation using **Expo Router** (file-based routing), **Zustand**, **Axios**, and a centralized service/bootstrap layer.
+# REACT-NATIVE-EXPO-BASE-SETUP
 
-## Requirements
+A scalable and production-ready Expo (SDK 55) + React Native (TypeScript) starter architecture built for real-world applications.
+
+This project is designed to help teams build maintainable mobile applications using modern Expo-first practices, clean architecture principles, and a predictable developer workflow.
+
+The stack is intentionally opinionated to reduce unnecessary complexity and improve long-term maintainability.
+
+Core technologies used:
+
+- Expo SDK 55
+- React Native
+- TypeScript
+- Expo Router
+- Zustand
+- Axios
+- Zod
+- Jest
+- ESLint + Prettier
+- Husky
+
+---
+
+# Why this project exists
+
+Many React Native projects become difficult to maintain over time because of:
+
+- inconsistent folder structures
+- navigation complexity
+- scattered business logic
+- untyped APIs
+- poor environment handling
+- direct pushes to production branches
+- inconsistent coding practices
+
+This repository tries to solve those issues by providing:
+
+- a clean folder structure
+- Expo-first architecture
+- file-based routing with Expo Router
+- centralized services and bootstrap layers
+- consistent code standards
+- scalable state management
+- predictable Git workflows
+
+The goal is to make onboarding easy for both experienced developers and freshers.
+
+---
+
+# Tech stack
+
+| Technology   | Purpose             |
+| ------------ | ------------------- |
+| Expo SDK 55  | App framework       |
+| React Native | Mobile UI framework |
+| TypeScript   | Static typing       |
+| Expo Router  | File-based routing  |
+| Zustand      | State management    |
+| Axios        | HTTP client         |
+| Zod          | Runtime validation  |
+| Jest         | Testing             |
+| ESLint       | Code linting        |
+| Prettier     | Code formatting     |
+| Husky        | Git hooks           |
+
+---
+
+# Requirements
+
+Before starting, ensure the following tools are installed on your machine.
+
+## Required software
 
 - Node.js LTS
-- Xcode (iOS) / Android Studio (Android)
+- npm
+- Git
+- Xcode (for iOS development)
+- Android Studio (for Android development)
 
-## First-time setup
+Recommended:
 
-1. Install dependencies:
+- VS Code
+- Expo Tools extension
+- React Native Tools extension
 
-   ```bash
-   npm install
-   ```
+---
 
-2. Create environment files from the template:
+# First-time setup
 
-   ```bash
-   cp .env.example .env.development
-   ```
+## 1. Clone the repository
 
-   Adjust values for your API and bundle identifiers.
+```bash
+git clone <repository-url>
+```
 
-3. Install Husky hooks (once per clone):
+Move into the project:
 
-   ```bash
-   npm run prepare
-   ```
+```bash
+cd react-native-expo-base-setup
+```
 
-## Scripts
+---
 
-| Script                 | Purpose                               |
-| ---------------------- | ------------------------------------- |
-| `npm run start`        | Start the Expo dev server             |
-| `npm run android`      | Start targeting Android               |
-| `npm run ios`          | Start targeting iOS                   |
-| `npm run web`          | Start targeting web                   |
-| `npm run lint`         | ESLint (zero warnings)                |
-| `npm run lint:fix`     | ESLint with autofix                   |
-| `npm run format`       | Prettier write                        |
-| `npm run format:check` | Prettier check                        |
-| `npm run typecheck`    | TypeScript `--noEmit`                 |
-| `npm test`             | Jest                                  |
-| `npm run clean`        | Remove `.expo` and Metro caches       |
-| `npm run reset-cache`  | Start Expo with a cleared Metro cache |
+## 2. Install dependencies
 
-## Architecture overview
+```bash
+npm install
+```
 
-- `app/`: Expo Router routes (`_layout.tsx`, groups, tabs, modal, `+not-found`)
-- `src/startup/`: bootstrap logic, fatal startup UI (used by root `app/_layout.tsx`; not part of the Expo Router `app/` tree)
-- `src/api/`: typed API clients (HTTP calls + Zod parsing)
-- `src/components/`: reusable UI + layout + error boundaries
-- `src/config/`: runtime configuration loading + validation (`zod`)
-- `src/constants/`: href constants for Expo Router, timing, storage keys, shared literals
-- `src/contexts/`: cross-cutting React contexts (services)
-- `src/features/`: feature modules (expand here as the product grows)
-- `src/hooks/`: reusable hooks
-- `src/providers/`: top-level provider composition (no manual `NavigationContainer`)
-- `src/router/`: small navigation-related helpers (e.g. shared stack `screenOptions`)
-- `src/screens/`: screen implementations (each paired with a `*.styles.ts` file; imported by `app/` routes)
-- `src/services/`: platform and infrastructure services (HTTP, logging, permissions, **expo-network** connectivity, etc.)
-- `src/state/`: Zustand stores
-- `src/store/`: barrel re-exports for store entry points
-- `src/theme/`: design tokens + theme provider
-- `src/types/`: shared domain types
-- `src/utils/`: small pure helpers (keep lean)
+This installs all project dependencies defined in `package.json`.
 
-## Authentication and navigation
+---
 
-- **Entry**: `package.json` → `"main": "expo-router/entry"`; `babel.config.js` uses `babel-preset-expo` (Expo Router is wired there in SDK 55) with the Reanimated Babel plugin **last**.
-- **Public routes** (`app/(auth)/`): `login`, `register`, `forgot-password`, `reset-password` (stack + solid headers).
-- **Private routes** (`app/(app)/`): nested **tabs** (`tab1`–`tab4`) each with its own **stack** (`index` screen), plus a **modal** example at `/(app)/modal`.
-- **Guards**: group layouts use `Redirect` when the session state does not match the area.
-- **APIs**: prefer `router.push` / `router.replace` / `router.back`, `<Link href={...} />`, and `useLocalSearchParams` (see `src/constants/routes.ts` for shared `HREF_*` values).
-- **Deep linking**: configured via `scheme` in `app.config.ts` and Expo Router’s built-in integration (no manual `NavigationContainer` linking config).
-- **Session restoration** reads **Expo SecureStore** on startup; in-memory session mirrors tokens for Axios interceptors.
-- **HTTP `401`**: refresh once, then invalidate the session via the existing bridge (sign-out navigates with `router.replace`).
+## 3. Create environment files
 
-## Styling rules
+Copy the example environment file:
 
-- No Tailwind/NativeWind: **StyleSheet** only, typically via `useThemedStyles(() => createXStyles(theme))`
-- Avoid hardcoded colors in product UI: prefer tokens from `src/theme`
+```bash
+cp .env.example .env.development
+```
 
-## iOS UI stability
+Update values according to your environment.
 
-This template intentionally avoids translucent “glass” navigation materials and keeps headers and tab bars **opaque and predictable**.
+Example:
 
-## Environment configuration
+```env
+EXPO_PUBLIC_API_BASE_URL=https://api.example.com
+```
 
-`app.config.ts` loads:
+Important:
+
+- Only variables prefixed with `EXPO_PUBLIC_` are exposed to the app bundle
+- Never store secrets in frontend environment files
+
+Do not commit real environment files to Git.
+
+---
+
+## 4. Install Git hooks
+
+Run:
+
+```bash
+npm run prepare
+```
+
+This installs Husky hooks which help enforce code quality before commits.
+
+---
+
+# Running the application
+
+## Start the Expo development server
+
+```bash
+npm run start
+```
+
+---
+
+## Run Android
+
+```bash
+npm run android
+```
+
+---
+
+## Run iOS
+
+```bash
+npm run ios
+```
+
+---
+
+## Run web version
+
+```bash
+npm run web
+```
+
+---
+
+# Available scripts
+
+| Script                 | Purpose                     |
+| ---------------------- | --------------------------- |
+| `npm run start`        | Start Expo dev server       |
+| `npm run android`      | Start Android build         |
+| `npm run ios`          | Start iOS build             |
+| `npm run web`          | Start web build             |
+| `npm run lint`         | Run ESLint                  |
+| `npm run lint:fix`     | Auto-fix lint issues        |
+| `npm run format`       | Format code using Prettier  |
+| `npm run format:check` | Check formatting            |
+| `npm run typecheck`    | Run TypeScript validation   |
+| `npm test`             | Run tests                   |
+| `npm run clean`        | Remove Expo + Metro cache   |
+| `npm run reset-cache`  | Start Expo with clean cache |
+
+---
+
+# Project structure
+
+The project follows a modular and scalable folder structure.
+
+```txt
+app/
+src/
+```
+
+---
+
+# app/ directory
+
+The `app/` folder is used only for Expo Router route files.
+
+Example:
+
+```txt
+app/
+  _layout.tsx
+  +not-found.tsx
+
+  (auth)/
+  (app)/
+```
+
+Important:
+
+Only route-related files should exist here.
+
+Do NOT place:
+
+- services
+- hooks
+- utilities
+- styles
+- components
+- stores
+- API logic
+
+inside `app/`.
+
+Expo Router automatically treats files inside `app/` as routes.
+
+---
+
+# src/ directory
+
+The `src/` folder contains the actual application implementation.
+
+## Folder overview
+
+### `src/api/`
+
+Contains API clients and request logic.
+
+Responsibilities:
+
+- Axios instances
+- API services
+- request/response typing
+- Zod validation
+
+---
+
+### `src/bootstrap/`
+
+Contains application startup logic.
+
+Responsibilities:
+
+- app initialization
+- startup checks
+- session restoration
+- global handlers
+
+---
+
+### `src/components/`
+
+Reusable UI components shared across screens.
+
+Examples:
+
+- buttons
+- loaders
+- cards
+- modals
+- error boundaries
+
+---
+
+### `src/config/`
+
+Application configuration and environment validation.
+
+---
+
+### `src/constants/`
+
+Shared constants.
+
+Examples:
+
+- route names
+- storage keys
+- timeout values
+
+---
+
+### `src/features/`
+
+Feature-based modules.
+
+As the project grows, business logic should move here.
+
+Example:
+
+```txt
+src/features/auth
+src/features/profile
+src/features/notifications
+```
+
+---
+
+### `src/hooks/`
+
+Reusable React hooks.
+
+---
+
+### `src/providers/`
+
+Application-level provider composition.
+
+Examples:
+
+- theme provider
+- query provider
+- authentication provider
+
+---
+
+### `src/screens/`
+
+Actual screen implementations.
+
+Route files inside `app/` should stay minimal and simply import screens from here.
+
+---
+
+### `src/services/`
+
+Platform and infrastructure services.
+
+Examples:
+
+- HTTP services
+- logging
+- analytics
+- permissions
+- network monitoring
+
+---
+
+### `src/state/`
+
+Zustand stores and application state.
+
+---
+
+### `src/theme/`
+
+Design system and theme tokens.
+
+Includes:
+
+- colors
+- spacing
+- typography
+- shadows
+
+---
+
+### `src/types/`
+
+Shared TypeScript types.
+
+---
+
+### `src/utils/`
+
+Small reusable utility functions.
+
+Keep this folder clean and focused.
+
+---
+
+# Navigation architecture
+
+This project uses Expo Router instead of React Navigation setup.
+
+Benefits:
+
+- file-based routing
+- simpler navigation
+- easier deep linking
+- less boilerplate
+- better scalability
+
+---
+
+# Navigation rules
+
+Use Expo Router APIs only.
+
+Preferred APIs:
+
+```tsx
+router.push(...)
+router.replace(...)
+router.back(...)
+```
+
+Use links:
+
+```tsx
+<Link href="/profile" />
+```
+
+Avoid manual `NavigationContainer` setup.
+
+---
+
+# Authentication flow
+
+Public routes:
+
+```txt
+app/(auth)/
+```
+
+Private routes:
+
+```txt
+app/(app)/
+```
+
+Route guards automatically redirect users depending on authentication state.
+
+Session restoration uses Expo SecureStore.
+
+---
+
+# Deep linking
+
+Deep linking is configured through:
+
+```txt
+app.config.ts
+```
+
+Expo Router handles linking automatically.
+
+No manual linking configuration is needed.
+
+---
+
+# Styling guidelines
+
+This project intentionally avoids Tailwind and NativeWind.
+
+We use:
+
+- React Native `StyleSheet`
+- centralized theme tokens
+- typed styles
+
+Recommended pattern:
+
+```tsx
+useThemedStyles(() => createStyles(theme));
+```
+
+Avoid:
+
+- hardcoded colors
+- large inline styles
+- duplicated spacing values
+
+---
+
+# State management
+
+Global state uses Zustand.
+
+Why Zustand:
+
+- lightweight
+- minimal boilerplate
+- easy to scale
+- TypeScript friendly
+
+Keep stores focused and small.
+
+Avoid massive global stores.
+
+---
+
+# Environment configuration
+
+Environment loading order:
 
 1. `.env`
-2. `.env.${APP_ENV}` (defaults to `development`)
-3. `.env.local` (optional overrides)
+2. `.env.${APP_ENV}`
+3. `.env.local`
 
-`EXPO_PUBLIC_*` values are exposed to the client bundle. **Never** put secrets in `EXPO_PUBLIC_*`.
+Example:
 
-Production builds require a non-empty `EXPO_PUBLIC_API_BASE_URL` (validated in `src/config/runtimeConfig.schema.ts`).
+```txt
+.env.development
+.env.staging
+.env.production
+```
 
-## Testing
+Never commit secrets.
 
-Jest is configured with `jest-expo`. Sample test: `__tests__/createAppTheme.test.ts`.
+---
 
-## Troubleshooting
+# Notifications
 
-- If Metro resolution acts odd after refactors: `npm run reset-cache`
-- If native modules change: rebuild dev clients / run `npx expo prebuild` when you opt into prebuild workflows
+Push notifications require a development build.
+
+Expo Go has limitations for remote notifications.
+
+Use:
+
+```bash
+npx expo run:ios
+```
+
+or
+
+```bash
+npx expo run:android
+```
+
+for proper testing.
+
+---
+
+# Git workflow
+
+This repository follows a strict Pull Request workflow.
+
+The `main` branch is protected.
+
+Direct pushes to `main` are not allowed.
+
+All changes must go through:
+
+1. feature branch
+2. Pull Request
+3. review
+4. approval
+5. merge
+
+---
+
+# Branch naming conventions
+
+## Feature branches
+
+```txt
+feature/<short-description>
+```
+
+Examples:
+
+```txt
+feature/auth-flow
+feature/profile-screen
+```
+
+---
+
+## Fix branches
+
+```txt
+fix/<short-description>
+```
+
+Examples:
+
+```txt
+fix/login-crash
+fix/android-safe-area
+```
+
+---
+
+## Refactor branches
+
+```txt
+refactor/<short-description>
+```
+
+---
+
+## Chore branches
+
+```txt
+chore/<short-description>
+```
+
+---
+
+# Rebase workflow (IMPORTANT)
+
+This repository follows a rebase-first workflow.
+
+We do NOT merge `main` into feature branches.
+
+Before creating a Pull Request, always rebase your branch on top of the latest `main`.
+
+---
+
+# How to sync your branch correctly
+
+## Step 1
+
+Switch to main:
+
+```bash
+git checkout main
+```
+
+---
+
+## Step 2
+
+Pull latest changes:
+
+```bash
+git pull origin main
+```
+
+---
+
+## Step 3
+
+Switch back to your branch:
+
+```bash
+git checkout feature/my-feature
+```
+
+---
+
+## Step 4
+
+Rebase your branch:
+
+```bash
+git rebase main
+```
+
+---
+
+## Step 5
+
+Resolve conflicts if any.
+
+Then continue:
+
+```bash
+git add .
+git rebase --continue
+```
+
+---
+
+## Step 6
+
+Push updated branch:
+
+```bash
+git push --force-with-lease
+```
+
+---
+
+# Why we use rebase
+
+Rebase helps maintain:
+
+- cleaner Git history
+- easier debugging
+- fewer merge commits
+- simpler rollback
+- cleaner Pull Requests
+
+This makes the repository easier to maintain over time.
+
+---
+
+# Pull Request rules
+
+Before creating a PR:
+
+Run:
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+```
+
+All checks must pass.
+
+---
+
+# PR expectations
+
+Each PR should:
+
+- solve one concern only
+- include a meaningful title
+- include screenshots for UI changes
+- avoid unrelated formatting changes
+- be rebased with latest `main`
+
+---
+
+# Commit message convention
+
+We use Conventional Commits.
+
+Format:
+
+```txt
+type(scope): message
+```
+
+Example:
+
+```txt
+feat(auth): add login persistence
+fix(router): resolve redirect loop
+refactor(theme): simplify tokens
+```
+
+---
+
+# Allowed commit types
+
+- feat
+- fix
+- refactor
+- chore
+- docs
+- style
+- test
+- perf
+- build
+- ci
+
+---
+
+# Testing
+
+Testing uses Jest with `jest-expo`.
+
+Run tests:
+
+```bash
+npm test
+```
+
+---
+
+# Troubleshooting
+
+## Reset Metro cache
+
+```bash
+npm run reset-cache
+```
+
+---
+
+## Clear Expo cache
+
+```bash
+npm run clean
+```
+
+---
+
+## Native dependency changes
+
+If native modules change:
+
+```bash
+npx expo prebuild
+```
+
+or rebuild development clients.
+
+---
+
+# Security rules
+
+Never commit:
+
+- `.env`
+- API keys
+- secrets
+- certificates
+- build artifacts
+- `.expo`
+- `node_modules`
+
+Use `.env.example` as the public template.
+
+---
+
+# Recommended GitHub repository settings
+
+Enable:
+
+- protected `main`
+- required Pull Requests
+- required approvals
+- required status checks
+- required branch updates
+- conversation resolution
+- linear history
+- blocked force pushes on `main`
+
+---
+
+# Final notes
+
+This repository is designed to be:
+
+- scalable
+- production-ready
+- beginner-friendly
+- team-friendly
+- maintainable long term
+
+When contributing:
+
+- keep code simple
+- prefer readability over cleverness
+- write reusable components
+- avoid unnecessary dependencies
+- follow existing architecture patterns
+
+Consistency matters more than personal preference.
+
+Welcome to the project and happy coding.
