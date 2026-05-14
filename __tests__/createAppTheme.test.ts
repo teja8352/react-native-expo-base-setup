@@ -1,6 +1,6 @@
 /// <reference types="jest" />
 
-import { createAppTheme } from "theme/createAppTheme";
+import { createAppTheme } from "../theme/createAppTheme";
 
 describe("createAppTheme", () => {
   it("creates light and dark themes with consistent token keys", () => {
