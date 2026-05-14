@@ -1,5 +1,3 @@
-Below is a more detailed, beginner-friendly, production-quality README version. It explains the architecture, workflows, and development practices in a human way so even freshers can onboard easily.
-
 # REACT-NATIVE-EXPO-BASE-SETUP
 
 A scalable and production-ready Expo (SDK 55) + React Native (TypeScript) starter architecture built for real-world applications.
@@ -760,16 +758,18 @@ refactor(theme): simplify tokens
 
 # Allowed commit types
 
-- feat
-- fix
-- refactor
-- chore
-- docs
-- style
-- test
-- perf
-- build
-- ci
+| Type       | Meaning                                              | Example                                  |
+| ---------- | ---------------------------------------------------- | ---------------------------------------- |
+| `feat`     | A new feature                                        | `feat: add dark mode support`            |
+| `fix`      | A bug fix                                            | `fix: resolve login crash on Android`    |
+| `refactor` | Code changes without changing behavior               | `refactor: simplify auth state handling` |
+| `chore`    | Maintenance tasks, tooling, cleanup                  | `chore: update dependencies`             |
+| `docs`     | Documentation changes only                           | `docs: add API setup instructions`       |
+| `style`    | Formatting or UI style changes without logic changes | `style: format code with prettier`       |
+| `test`     | Adding or updating tests                             | `test: add unit tests for theme hook`    |
+| `perf`     | Performance improvements                             | `perf: optimize FlatList rendering`      |
+| `build`    | Build system or dependency/build config changes      | `build: configure metro bundler aliases` |
+| `ci`       | Continuous integration/deployment changes            | `ci: add GitHub Actions workflow`        |
 
 ---
 
