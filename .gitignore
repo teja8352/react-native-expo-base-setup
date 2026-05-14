@@ -52,3 +52,14 @@ app-example
 
 expo-env.d.ts
 # @end expo-cli
+
+# Generic
+*.apk
+*.ipa
+*.bat
+*.sh
+*.exe
+*.zip
+*.txt
+
+rules/
