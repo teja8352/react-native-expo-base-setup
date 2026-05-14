@@ -45,14 +45,6 @@ export default function Tab1HomeScreen() {
 
       const notifications = await permissions.request("notifications");
       console.log("notifications", notifications);
-
-      return {
-        camera,
-        microphone,
-        mediaLibrary,
-        location,
-        notifications,
-      };
     } catch (error) {
       console.error("Permission request failed:", error);
     }
