@@ -1,0 +1,13 @@
+export const SPLASH_HIDE_DELAY_MS = 0;
+
+export const HTTP_DEFAULT_TIMEOUT_MS = 30_000;
+
+export const LOCATION_DEFAULT_TIMEOUT_MS = 20_000;
+
+export const AUTH_REFRESH_LEEWAY_MS = 60_000;
+
+export const DOUBLE_TAP_EXIT_INTERVAL_MS = 2000;
+
+export const HTTP_MAX_RETRIES = 2;
+
+export const HTTP_RETRY_BASE_DELAY_MS = 400;
